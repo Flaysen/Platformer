@@ -6,16 +6,30 @@ namespace LevelEditor
 {
     public class ObjectPlacer : MonoBehaviour
     {
-        private Grid _grid;
+        [SerializeField] private GameObject _objectToPlace;
+        private GameObject _selectedObject;
 
+
+        private Grid _grid;
         private void Awake()
         {
             _grid = FindObjectOfType<Grid>();
+            _selectedObject = Instantiate(_objectToPlace, transform.position, Quaternion.identity, transform); 
+            _selectedObject.GetComponent<MeshRenderer>().material.color = Color.gray;        
         }
 
         // Update is called once per frame
         void Update()
         {
+
+            RaycastHit hitInfoHover;
+            Ray rayHover = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if(Physics.Raycast(rayHover, out hitInfoHover))
+            {
+                _selectedObject.transform.position = _grid.GetNearestPointOnGrid(hitInfoHover.point);
+            }
+
             if(Input.GetMouseButtonDown(0))
             {
                 RaycastHit hitInfo;
@@ -31,7 +45,10 @@ namespace LevelEditor
         private void PlaceObjectNear(Vector3 clickPoint)
         {
             var finalPosition = _grid.GetNearestPointOnGrid(clickPoint);
-            GameObject.CreatePrimitive(PrimitiveType.Cube).transform.position = finalPosition;  
+
+            Instantiate(_objectToPlace, finalPosition, Quaternion.identity, _grid.transform);
+
+            //GameObject.CreatePrimitive(PrimitiveType.Cube).transform.position = finalPosition;  
         }
     }   
 }
