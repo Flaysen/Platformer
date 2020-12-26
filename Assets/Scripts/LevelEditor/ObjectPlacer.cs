@@ -43,7 +43,9 @@ namespace LevelEditor
                 {
                     if(_isPositionValid)
                     {                      
-                        PlaceObject(selectedObjectGridPosition);
+                        //PlaceObject(selectedObjectGridPosition);
+                        ICommand command = new PlaceLevelObjectCommand(_objectToPlace, selectedObjectGridPosition, _grid);
+                        CommandInvoker.AddCommand(command);
                     }                  
                 }  
   
@@ -59,10 +61,10 @@ namespace LevelEditor
             _selectedObject.SetTransparency(true);
             _selectedObject.GetComponent<Collider>().enabled = false;           
         }
-        private void PlaceObject(GridPosition gridPosition)
+        public void PlaceObject(LevelObject objectToPlace, GridPosition gridPosition, Grid grid)
         {  
-            _grid.ToggleGridPositionUsage(gridPosition);
-            Instantiate(_objectToPlace, gridPosition.Position, Quaternion.identity, _grid.transform);       
+            grid.ToggleGridPositionUsage(gridPosition);
+            Instantiate(objectToPlace, gridPosition.Position, Quaternion.identity, grid.transform);       
         }
 
         private void DeleteObject(Transform transform)
