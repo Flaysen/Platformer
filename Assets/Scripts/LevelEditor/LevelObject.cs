@@ -1,27 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class LevelObject : MonoBehaviour
+namespace LevelEditor
 {
-    //public bool IsVisable { get; set; }
-
-    private MeshRenderer _meshRenderer;
-    private void Awake()
+    public class LevelObject : MonoBehaviour
     {
-        _meshRenderer = transform.GetChild(0).GetComponent<MeshRenderer>();
-    } 
+        private MeshRenderer _meshRenderer;
+        private void Awake()
+        {
+            _meshRenderer = transform.GetChild(0).GetComponent<MeshRenderer>();
+        } 
 
-    public void ToggleHover()
-    {
-        Color color = _meshRenderer.material.color;
-        color = new Color(color.r, color.g, color.b, 0.1f); 
-        _meshRenderer.material.color = color;
+        public void SetTransparency(bool isTransparent)
+        {
+            Color color = _meshRenderer.material.color;
+            _meshRenderer.material.color = new Color(color.r, color.g, color.b, 0.1f);
+        }
+
+        public void SetVisability(bool isVisible)
+        {
+            _meshRenderer.enabled = isVisible;
+        }
     }
-
-    public void SetVisability(bool isVisible)
-    {
-        _meshRenderer.enabled = isVisible;
-    }
-
 }
+
+
