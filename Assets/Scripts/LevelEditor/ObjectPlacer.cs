@@ -8,6 +8,7 @@ namespace LevelEditor
     {
         [SerializeField] private GameObject _objectToPlace;
         private GameObject _selectedObject;
+        private bool _isPositionValid;
 
 
         private Grid _grid;
@@ -15,9 +16,8 @@ namespace LevelEditor
         {
             _grid = FindObjectOfType<Grid>();
             _selectedObject = Instantiate(_objectToPlace, transform.position, Quaternion.identity, transform); 
-            Color color = _selectedObject.GetComponent<MeshRenderer>().material.color;
-            color = new Color(color.r, color.g, color.b, 0.1f); 
-            _selectedObject.GetComponent<MeshRenderer>().material.color = color;   
+            _selectedObject.GetComponent<LevelObject>().ToggleHover();
+            _selectedObject.GetComponent<Collider>().enabled = false;   
 
         }
 
@@ -27,31 +27,51 @@ namespace LevelEditor
 
             RaycastHit hitInfoHover;
             Ray rayHover = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Transform selectedTransform = _selectedObject.transform;
 
             if(Physics.Raycast(rayHover, out hitInfoHover))
             {
-                _selectedObject.transform.position = _grid.GetNearestPointOnGrid(hitInfoHover.point);
+               
+                selectedTransform.position = _grid.GetNearestPointOnGrid(hitInfoHover.point);
+                 _isPositionValid =  _grid.CheckIfGridPositionIsValid(selectedTransform.position);
+                _selectedObject.GetComponent<LevelObject>().SetVisability(_isPositionValid);
             }
 
-            if(Input.GetMouseButtonDown(0))
-            {
-                RaycastHit hitInfo;
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+             Debug.DrawLine(rayHover.origin, hitInfoHover.point, Color.blue);
 
-                if(Physics.Raycast(ray, out hitInfo))
+            if(Input.GetMouseButtonDown(0))
+            {       
+                if(_isPositionValid)
                 {
-                    PlaceObjectNear(hitInfo.point);
-                }
+                    PlaceObject(selectedTransform.position);
+                }              
             }   
+
+            if(Input.GetMouseButtonDown(1))
+            {
+                if(true)
+                {
+                    DeleteObject(hitInfoHover.collider.transform);
+                }           
+            }
+        }
+        private void PlaceObject(Vector3 position)
+        {  
+            _grid.TogglePositionUsage(position);
+            Instantiate(_objectToPlace, position, Quaternion.identity, _grid.transform);       
         }
 
-        private void PlaceObjectNear(Vector3 clickPoint)
+        private void DeleteObject(Transform transform)
         {
-            var finalPosition = _grid.GetNearestPointOnGrid(clickPoint);
-
-            Instantiate(_objectToPlace, finalPosition, Quaternion.identity, _grid.transform);
-
-            //GameObject.CreatePrimitive(PrimitiveType.Cube).transform.position = finalPosition;  
+            Debug.Log("A");
+            if(transform.GetComponent<LevelObject>())
+            {
+            Debug.Log("B");
+                
+                Vector3 finalPosition = _grid.GetNearestPointOnGrid(transform.position);
+                _grid.TogglePositionUsage(finalPosition);
+                Destroy(transform.gameObject); 
+            }         
         }
     }   
 }

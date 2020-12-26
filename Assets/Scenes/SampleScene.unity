@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1614f9ff077e5a488387cdde8f60f39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _objectToPlace: {fileID: 5283204710525605036, guid: daf9ed1492c80424fa572297cefe0c06,
+  _objectToPlace: {fileID: 3503966095949668581, guid: 7c6198502c49013478367d2e4fe2a50e,
     type: 3}
 --- !u!4 &414591499
 Transform:
@@ -287,7 +287,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a099740b138f7774d84c5229c01bba54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _size: {x: 10, y: 1, z: 10}
+  _size: {x: 3, y: 3, z: 3}
   _offset: 1
 --- !u!4 &938562744
 Transform:
