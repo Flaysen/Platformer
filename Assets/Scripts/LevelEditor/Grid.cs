@@ -6,10 +6,11 @@ namespace LevelEditor
 {
     public class Grid : MonoBehaviour
     {
+        static public List<LevelObject> LevelObjects = new List<LevelObject>(); 
         [SerializeField] private Vector3 _size;
         [SerializeField] private float _offset = 1;
         private List<GridPosition> _gridPositions = new List<GridPosition>();
-
+        
         private void Awake()
         {
             InitializeGridPositions();

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace LevelEditor 
@@ -61,11 +62,12 @@ namespace LevelEditor
             _selectedObject.SetTransparency(true);
             _selectedObject.GetComponent<Collider>().enabled = false;           
         }
-        public void PlaceObject(LevelObject objectToPlace, GridPosition gridPosition, Grid grid)
+        public void PlaceLeveleObject(LevelObject objectToPlace, GridPosition gridPosition, Grid grid)
         {  
             grid.ToggleGridPositionUsage(gridPosition);
-            Instantiate(objectToPlace, gridPosition.Position, Quaternion.identity, grid.transform);       
-        }
+            LevelObject placedLevelObject = Instantiate(objectToPlace, gridPosition.Position, Quaternion.identity, grid.transform);       
+            Grid.LevelObjects.Add(placedLevelObject);
+       }
 
         private void DeleteObject(Transform transform)
         {
@@ -76,6 +78,22 @@ namespace LevelEditor
                 Destroy(transform.gameObject); 
             }         
         }
+
+        public void RemoveLevelObject(GridPosition gridPosition, Grid grid)
+        {
+            //evelObject levelObjectToRemove = Grid.LevelObjects.Where(l => l.transform.position == gridPosition.Position).FirstOrDefault();
+
+            for(int i = 0; i < Grid.LevelObjects.Count; i++)
+            {
+                if (Grid.LevelObjects[i].transform.position == gridPosition.Position)
+                { 
+                    grid.ToggleGridPositionUsage(gridPosition);
+                    Destroy(Grid.LevelObjects[i].gameObject);  
+                    Grid.LevelObjects.RemoveAt(i);
+                    return;  
+                }
+            }            
+        }      
     }   
 }
 
