@@ -9,13 +9,13 @@ namespace LevelEditor
     {
         [SerializeField] private LevelObject _objectToPlace;
         private LevelObject _selectedObject;
-        private Grid _grid;
+        private LevelGrid _grid;
         private Camera _camera;
         private bool _isPositionValid;
      
         private void Awake()
         {
-            _grid = FindObjectOfType<Grid>();
+            _grid = FindObjectOfType<LevelGrid>();
 
             _camera = FindObjectOfType<Camera>();
 
@@ -44,7 +44,6 @@ namespace LevelEditor
                 {
                     if(_isPositionValid)
                     {                      
-                        //PlaceObject(selectedObjectGridPosition);
                         ICommand command = new PlaceLevelObjectCommand(_objectToPlace, selectedObjectGridPosition, _grid);
                         CommandInvoker.AddCommand(command);
                     }                  
@@ -52,7 +51,18 @@ namespace LevelEditor
   
                 if(Input.GetMouseButtonDown(1))
                 {      
-                    DeleteObject(hitInfo.collider.transform);                             
+                    //DeleteObject(hitInfo.collider.transform);
+                    LevelObject objectToDelete = hitInfo.collider.transform.GetComponent<LevelObject>();
+                    if(objectToDelete != null)
+                    {
+                        ICommand command = new DeleteLevelObjectCommand(
+                            objectToDelete,
+                            _grid.GetNearestPointOnGrid(objectToDelete.transform.position),
+                            _grid);
+
+                        CommandInvoker.AddCommand(command);                
+                    }
+                                 
                 }     
             }    
         }
@@ -62,34 +72,37 @@ namespace LevelEditor
             _selectedObject.SetTransparency(true);
             _selectedObject.GetComponent<Collider>().enabled = false;           
         }
-        public void PlaceLeveleObject(LevelObject objectToPlace, GridPosition gridPosition, Grid grid)
+        public void PlaceLeveleObject(LevelObject objectToPlace, GridPosition gridPosition, LevelGrid grid)
         {  
             grid.ToggleGridPositionUsage(gridPosition);
             LevelObject placedLevelObject = Instantiate(objectToPlace, gridPosition.Position, Quaternion.identity, grid.transform);       
-            Grid.LevelObjects.Add(placedLevelObject);
+            LevelGrid.LevelObjects.Add(placedLevelObject);
+            placedLevelObject.gameObject.SetActive(true);
        }
 
-        private void DeleteObject(Transform transform)
+        public void DeleteLevelObject(LevelObject objectToPlace, GridPosition gridPosition, LevelGrid grid)
         {
-            if(transform.GetComponent<LevelObject>())
-            {            
-                GridPosition finalPosition = _grid.GetNearestPointOnGrid(transform.position);
-                _grid.ToggleGridPositionUsage(finalPosition);
-                Destroy(transform.gameObject); 
-            }         
-        }
-
-        public void RemoveLevelObject(GridPosition gridPosition, Grid grid)
-        {
-            //evelObject levelObjectToRemove = Grid.LevelObjects.Where(l => l.transform.position == gridPosition.Position).FirstOrDefault();
-
-            for(int i = 0; i < Grid.LevelObjects.Count; i++)
+           for(int i = 0; i < LevelGrid.LevelObjects.Count; i++)
             {
-                if (Grid.LevelObjects[i].transform.position == gridPosition.Position)
+                if (LevelGrid.LevelObjects[i].transform.position == gridPosition.Position)
                 { 
                     grid.ToggleGridPositionUsage(gridPosition);
-                    Destroy(Grid.LevelObjects[i].gameObject);  
-                    Grid.LevelObjects.RemoveAt(i);
+                    LevelGrid.LevelObjects[i].gameObject.SetActive(false);
+                    LevelGrid.LevelObjects.RemoveAt(i);
+                    return;  
+                }
+            }            
+        }
+
+        public void RemoveLevelObject(GridPosition gridPosition, LevelGrid grid)
+        {
+            for(int i = 0; i < LevelGrid.LevelObjects.Count; i++)
+            {
+                if (LevelGrid.LevelObjects[i].transform.position == gridPosition.Position)
+                { 
+                    grid.ToggleGridPositionUsage(gridPosition);
+                    LevelGrid.LevelObjects[i].gameObject.SetActive(false);
+                    LevelGrid.LevelObjects.RemoveAt(i);
                     return;  
                 }
             }            

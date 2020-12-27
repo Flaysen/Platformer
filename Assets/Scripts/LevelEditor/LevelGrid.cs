@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LevelEditor
 {
-    public class Grid : MonoBehaviour
+    public class LevelGrid : MonoBehaviour
     {
         static public List<LevelObject> LevelObjects = new List<LevelObject>(); 
         [SerializeField] private Vector3 _size;
