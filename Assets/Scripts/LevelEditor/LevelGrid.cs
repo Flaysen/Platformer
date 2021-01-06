@@ -17,7 +17,7 @@ namespace LevelEditor
 
             CreatePlane();
         }
-
+        
         public void ToggleGridPositionUsage(GridPosition gridPosition)
         {           
             GridPosition positionToUse = GetGridPosition(gridPosition);
@@ -36,11 +36,6 @@ namespace LevelEditor
             return false;
         }
 
-        private GridPosition GetGridPosition(GridPosition gridPosition)
-        {
-            return _gridPositions.Where(gP => gP.Position == gridPosition.Position).FirstOrDefault();
-        }
-
         public GridPosition GetNearestPointOnGrid(Vector3 position)
         {
             position -= transform.position;
@@ -56,6 +51,11 @@ namespace LevelEditor
     
             return result;         
         }
+
+        private GridPosition GetGridPosition(GridPosition gridPosition)
+        {
+            return _gridPositions.Where(gP => gP.Position == gridPosition.Position).FirstOrDefault();
+        }    
 
         private void CreatePlane()
         {

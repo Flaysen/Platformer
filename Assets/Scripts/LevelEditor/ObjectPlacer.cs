@@ -16,7 +16,6 @@ namespace LevelEditor
         private void Awake()
         {
             _grid = FindObjectOfType<LevelGrid>();
-
             _camera = FindObjectOfType<Camera>();
 
             CreatePlacerPointer();
@@ -51,7 +50,6 @@ namespace LevelEditor
   
                 if(Input.GetMouseButtonDown(1))
                 {      
-                    //DeleteObject(hitInfo.collider.transform);
                     LevelObject objectToDelete = hitInfo.collider.transform.GetComponent<LevelObject>();
                     if(objectToDelete != null)
                     {
@@ -61,8 +59,7 @@ namespace LevelEditor
                             _grid);
 
                         CommandInvoker.AddCommand(command);                
-                    }
-                                 
+                    }                         
                 }     
             }    
         }

@@ -22,6 +22,6 @@ public class DeleteLevelObjectCommand : ICommand
     }
     public void Undo()
     {
-         _placer.PlaceLeveleObject(_levelObject, _gridPosition, _grid);
+        _placer.PlaceLeveleObject(_levelObject, _gridPosition, _grid);
     }
 }
