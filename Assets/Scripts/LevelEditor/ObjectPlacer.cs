@@ -74,21 +74,6 @@ namespace LevelEditor
             LevelGrid.LevelObjects.Add(placedLevelObject);
             placedLevelObject.gameObject.SetActive(true);
        }
-
-        public void DeleteLevelObject(LevelObject objectToPlace, GridPosition gridPosition, LevelGrid grid)
-        {
-           for(int i = 0; i < LevelGrid.LevelObjects.Count; i++)
-            {
-                if (LevelGrid.LevelObjects[i].transform.position == gridPosition.Position)
-                { 
-                    grid.ToggleGridPositionUsage(gridPosition);
-                    LevelGrid.LevelObjects[i].gameObject.SetActive(false);
-                    LevelGrid.LevelObjects.RemoveAt(i);
-                    return;  
-                }
-            }            
-        }
-
         public void RemoveLevelObject(GridPosition gridPosition, LevelGrid grid)
         {
             for(int i = 0; i < LevelGrid.LevelObjects.Count; i++)

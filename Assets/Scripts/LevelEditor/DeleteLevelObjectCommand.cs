@@ -20,7 +20,7 @@ namespace LevelEditor
 
         public void Execute()
         {
-            _placer.DeleteLevelObject(_levelObject, _gridPosition, _grid);
+            _placer.RemoveLevelObject(_gridPosition, _grid);
         }
         
         public void Undo()
