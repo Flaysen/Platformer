@@ -1,51 +1,55 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class CommandInvoker : MonoBehaviour
+namespace Core
 {
-    static Queue<ICommand> commandBuffer = new Queue<ICommand>();
-    static List<ICommand> commandHistory = new List<ICommand>();
-
-    static int counter;
-
-    public static void AddCommand(ICommand command)
+    public class CommandInvoker : MonoBehaviour
     {
-        while(commandHistory.Count > counter)
-        {
-            commandHistory.RemoveAt(counter);
-        }
-        commandBuffer.Enqueue(command);
-    }
+        static Queue<ICommand> commandBuffer = new Queue<ICommand>();
+        static List<ICommand> commandHistory = new List<ICommand>();
 
-    private void Update()
-    {
-        if (commandBuffer.Count > 0)
-        {
-            ICommand command = commandBuffer.Dequeue();
-            command.Execute();
+        static int counter;
 
-            commandHistory.Add(command);
-            counter++;
-        }
-        else
+        public static void AddCommand(ICommand command)
         {
-            if (Input.GetKeyDown(KeyCode.U))
+            while(commandHistory.Count > counter)
             {
-                if(counter > 0)
-                {
-                    counter--;
-                    commandHistory[counter].Undo();
-                }
+                commandHistory.RemoveAt(counter);
             }
-            if (Input.GetKeyDown(KeyCode.R))
+            commandBuffer.Enqueue(command);
+        }
+
+        private void Update()
+        {
+            if (commandBuffer.Count > 0)
             {
-                if(counter < commandHistory.Count)
-                {          
-                    commandHistory[counter].Execute();
-                    counter++;
+                ICommand command = commandBuffer.Dequeue();
+                command.Execute();
+
+                commandHistory.Add(command);
+                counter++;
+            }
+            else
+            {
+                if (Input.GetKeyDown(KeyCode.U))
+                {
+                    if(counter > 0)
+                    {
+                        counter--;
+                        commandHistory[counter].Undo();
+                    }
+                }
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    if(counter < commandHistory.Count)
+                    {          
+                        commandHistory[counter].Execute();
+                        counter++;
+                    }
                 }
             }
         }
     }
 }
+
+

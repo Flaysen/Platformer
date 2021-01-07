@@ -1,27 +1,33 @@
-﻿using LevelEditor;
-using UnityEngine;
+﻿using Core;
 
-public class DeleteLevelObjectCommand : ICommand
+namespace LevelEditor
 {
-    private LevelObject _levelObject;
-    private GridPosition _gridPosition;
-    private LevelGrid _grid;
-    private ObjectPlacer _placer;
+    public class DeleteLevelObjectCommand : ICommand
+    {
+        private LevelObject _levelObject;
+        private GridPosition _gridPosition;
+        private LevelGrid _grid;
+        private ObjectPlacer _placer;
 
-    public DeleteLevelObjectCommand(LevelObject levelObject, GridPosition gridPosition, LevelGrid grid)
-    {
-        _levelObject = levelObject;
-        _gridPosition = gridPosition;
-        _grid = grid;
+        public DeleteLevelObjectCommand(LevelObject levelObject, GridPosition gridPosition, LevelGrid grid)
+        {
+            _levelObject = levelObject;
+            _gridPosition = gridPosition;
+            _grid = grid;
 
-        _placer = new ObjectPlacer();
-    }
-    public void Execute()
-    {
-        _placer.DeleteLevelObject(_levelObject, _gridPosition, _grid);
-    }
-    public void Undo()
-    {
-        _placer.PlaceLeveleObject(_levelObject, _gridPosition, _grid);
+            _placer = new ObjectPlacer();
+        }
+
+        public void Execute()
+        {
+            _placer.DeleteLevelObject(_levelObject, _gridPosition, _grid);
+        }
+        
+        public void Undo()
+        {
+            _placer.PlaceLeveleObject(_levelObject, _gridPosition, _grid);
+        }
     }
 }
+
+

@@ -1,26 +1,31 @@
-﻿using LevelEditor;
+﻿using Core;
 
-public class PlaceLevelObjectCommand : ICommand
+namespace LevelEditor
 {
-    private LevelObject _levelObject;
-    private GridPosition _gridPosition;
-    private LevelGrid _grid;
-    private ObjectPlacer _placer;
-    
-    public PlaceLevelObjectCommand(LevelObject levelObject, GridPosition gridPosition, LevelGrid grid)
+    public class PlaceLevelObjectCommand : ICommand
     {
-        _levelObject = levelObject;
-        _gridPosition = gridPosition;
-        _grid = grid;
+        private LevelObject _levelObject;
+        private GridPosition _gridPosition;
+        private LevelGrid _grid;
+        private ObjectPlacer _placer;
+        
+        public PlaceLevelObjectCommand(LevelObject levelObject, GridPosition gridPosition, LevelGrid grid)
+        {
+            _levelObject = levelObject;
+            _gridPosition = gridPosition;
+            _grid = grid;
 
-        _placer = new ObjectPlacer();
-    }
-    public void Execute()
-    {    
-        _placer.PlaceLeveleObject(_levelObject, _gridPosition, _grid);
-    }
-    public void Undo()
-    {
-        _placer.RemoveLevelObject(_gridPosition, _grid);
+            _placer = new ObjectPlacer();
+        }
+        public void Execute()
+        {    
+            _placer.PlaceLeveleObject(_levelObject, _gridPosition, _grid);
+        }
+        public void Undo()
+        {
+            _placer.RemoveLevelObject(_gridPosition, _grid);
+        }
     }
 }
+
+
